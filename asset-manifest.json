@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/bookkeeping-app/static/css/main.c9cdca0c.css",
+    "main.js": "/bookkeeping-app/static/js/main.cf5d71b8.js",
+    "static/js/453.06fda8cf.chunk.js": "/bookkeeping-app/static/js/453.06fda8cf.chunk.js",
+    "index.html": "/bookkeeping-app/index.html",
+    "main.c9cdca0c.css.map": "/bookkeeping-app/static/css/main.c9cdca0c.css.map",
+    "main.cf5d71b8.js.map": "/bookkeeping-app/static/js/main.cf5d71b8.js.map",
+    "453.06fda8cf.chunk.js.map": "/bookkeeping-app/static/js/453.06fda8cf.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c9cdca0c.css",
+    "static/js/main.cf5d71b8.js"
+  ]
+}
