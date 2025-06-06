@@ -29,7 +29,7 @@ A modern web application for tracking personal income and expenses, built with R
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/bookkeeping-app.git
+git clone https://github.com/stevenwong325/Bookkeeping-App.git
 cd bookkeeping-app
 ```
 
