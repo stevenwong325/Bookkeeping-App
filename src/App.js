@@ -1,6 +1,64 @@
 import { useState, useEffect } from "react";
 
+const translations = {
+  en: {
+    title: "Bookkeeping App",
+    subtitle: "Track your income & expenses",
+    totalIncome: "Total Income",
+    totalExpense: "Total Expense",
+    balance: "Balance",
+    addTransaction: "Add New Transaction",
+    editTransaction: "Edit Transaction",
+    type: "Type",
+    category: "Category",
+    amount: "Amount",
+    date: "Date",
+    description: "Description",
+    update: "Update",
+    add: "Add Transaction",
+    filterTransactions: "Filter Transactions",
+    all: "All",
+    income: "Income",
+    expense: "Expense",
+    startDate: "Start Date",
+    endDate: "End Date",
+    transactions: "Transactions",
+    exportCSV: "Export CSV",
+    noTransactions: "No transactions found.",
+    edit: "Edit",
+    delete: "Delete"
+  },
+  zh: {
+    title: "記帳應用",
+    subtitle: "追蹤您的收支",
+    totalIncome: "總收入",
+    totalExpense: "總支出",
+    balance: "餘額",
+    addTransaction: "新增交易",
+    editTransaction: "編輯交易",
+    type: "類型",
+    category: "類別",
+    amount: "金額",
+    date: "日期",
+    description: "描述",
+    update: "更新",
+    add: "新增交易",
+    filterTransactions: "篩選交易",
+    all: "全部",
+    income: "收入",
+    expense: "支出",
+    startDate: "開始日期",
+    endDate: "結束日期",
+    transactions: "交易記錄",
+    exportCSV: "匯出CSV",
+    noTransactions: "未找到交易記錄。",
+    edit: "編輯",
+    delete: "刪除"
+  }
+};
+
 export default function App() {
+  const [language, setLanguage] = useState("en");
   const [transactions, setTransactions] = useState([]);
   const [categories] = useState({
     income: ["Salary", "Freelance", "Investment", "Gift"],
@@ -132,26 +190,44 @@ export default function App() {
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <header className="text-center">
-          <h1 className="text-3xl font-bold text-gray-800">Bookkeeping App</h1>
-          <p className="text-gray-600 mt-2">Track your income & expenses</p>
+          <div className="flex justify-end mb-4">
+            <button
+              onClick={() => setLanguage(language === "en" ? "zh" : "en")}
+              className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded text-sm"
+            >
+              {language === "en" ? "繁體中文" : "English"}
+            </button>
+          </div>
+          <h1 className={`text-3xl font-bold text-gray-800 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+            {translations[language].title}
+          </h1>
+          <p className={`text-gray-600 mt-2 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+            {translations[language].subtitle}
+          </p>
         </header>
 
         {/* Balance Summary */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="bg-white shadow rounded-lg p-4 text-center">
-            <p className="text-sm text-gray-600">Total Income</p>
+            <p className={`text-sm text-gray-600 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+              {translations[language].totalIncome}
+            </p>
             <p className="text-xl font-semibold text-green-600">
               ${totalIncome.toFixed(2)}
             </p>
           </div>
           <div className="bg-white shadow rounded-lg p-4 text-center">
-            <p className="text-sm text-gray-600">Total Expense</p>
+            <p className={`text-sm text-gray-600 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+              {translations[language].totalExpense}
+            </p>
             <p className="text-xl font-semibold text-red-600">
               ${totalExpense.toFixed(2)}
             </p>
           </div>
           <div className="bg-white shadow rounded-lg p-4 text-center">
-            <p className="text-sm text-gray-600">Balance</p>
+            <p className={`text-sm text-gray-600 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+              {translations[language].balance}
+            </p>
             <p className={`text-xl font-semibold ${balance >= 0 ? "text-green-600" : "text-red-600"}`}>
               ${balance.toFixed(2)}
             </p>
@@ -160,38 +236,38 @@ export default function App() {
 
         {/* Form */}
         <section className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">
-            {editingId ? "Edit Transaction" : "Add New Transaction"}
+          <h2 className={`text-xl font-semibold mb-4 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+            {editingId ? translations[language].editTransaction : translations[language].addTransaction}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Type
+                <label className={`block text-sm font-medium text-gray-700 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                  {translations[language].type}
                 </label>
                 <select
                   name="type"
                   value={form.type}
                   onChange={handleChange}
                   required
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                  className={`mt-1 block w-full border border-gray-300 rounded-md p-2 ${language === "zh" ? "font-noto-sans-tc" : ""}`}
                 >
-                  <option value="income">Income</option>
-                  <option value="expense">Expense</option>
+                  <option value="income">{translations[language].income}</option>
+                  <option value="expense">{translations[language].expense}</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Category
+                <label className={`block text-sm font-medium text-gray-700 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                  {translations[language].category}
                 </label>
                 <select
                   name="category"
                   value={form.category}
                   onChange={handleChange}
                   required
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                  className={`mt-1 block w-full border border-gray-300 rounded-md p-2 ${language === "zh" ? "font-noto-sans-tc" : ""}`}
                 >
-                  <option value="">Select Category</option>
+                  <option value="">{translations[language].category}</option>
                   {categories[form.type].map((cat) => (
                     <option key={cat} value={cat}>
                       {cat}
@@ -200,8 +276,8 @@ export default function App() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Amount
+                <label className={`block text-sm font-medium text-gray-700 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                  {translations[language].amount}
                 </label>
                 <input
                   type="number"
@@ -215,8 +291,8 @@ export default function App() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Date
+                <label className={`block text-sm font-medium text-gray-700 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                  {translations[language].date}
                 </label>
                 <input
                   type="date"
@@ -229,58 +305,60 @@ export default function App() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Description
+              <label className={`block text-sm font-medium text-gray-700 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                {translations[language].description}
               </label>
               <textarea
                 name="description"
                 value={form.description}
                 onChange={handleChange}
                 rows="2"
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className={`mt-1 block w-full border border-gray-300 rounded-md p-2 ${language === "zh" ? "font-noto-sans-tc" : ""}`}
               ></textarea>
             </div>
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
+              className={`bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded ${language === "zh" ? "font-noto-sans-tc" : ""}`}
             >
-              {editingId ? "Update" : "Add Transaction"}
+              {editingId ? translations[language].update : translations[language].add}
             </button>
           </form>
         </section>
 
         {/* Filters */}
         <section className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-xl font-semibold mb-4">Filter Transactions</h2>
+          <h2 className={`text-xl font-semibold mb-4 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+            {translations[language].filterTransactions}
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Type
+              <label className={`block text-sm font-medium text-gray-700 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                {translations[language].type}
               </label>
               <select
                 value={filter.type}
                 onChange={(e) =>
                   setFilter({ ...filter, type: e.target.value })
                 }
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className={`mt-1 block w-full border border-gray-300 rounded-md p-2 ${language === "zh" ? "font-noto-sans-tc" : ""}`}
               >
-                <option value="">All</option>
-                <option value="income">Income</option>
-                <option value="expense">Expense</option>
+                <option value="">{translations[language].all}</option>
+                <option value="income">{translations[language].income}</option>
+                <option value="expense">{translations[language].expense}</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Category
+              <label className={`block text-sm font-medium text-gray-700 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                {translations[language].category}
               </label>
               <select
                 value={filter.category}
                 onChange={(e) =>
                   setFilter({ ...filter, category: e.target.value })
                 }
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className={`mt-1 block w-full border border-gray-300 rounded-md p-2 ${language === "zh" ? "font-noto-sans-tc" : ""}`}
               >
-                <option value="">All</option>
+                <option value="">{translations[language].all}</option>
                 {[...categories.income, ...categories.expense].map((cat) => (
                   <option key={cat} value={cat}>
                     {cat}
@@ -289,8 +367,8 @@ export default function App() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Start Date
+              <label className={`block text-sm font-medium text-gray-700 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                {translations[language].startDate}
               </label>
               <input
                 type="date"
@@ -302,8 +380,8 @@ export default function App() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                End Date
+              <label className={`block text-sm font-medium text-gray-700 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                {translations[language].endDate}
               </label>
               <input
                 type="date"
@@ -320,33 +398,35 @@ export default function App() {
         {/* Transactions Table */}
         <section className="bg-white shadow rounded-lg overflow-hidden">
           <div className="flex justify-between items-center p-4">
-            <h2 className="text-xl font-semibold">Transactions</h2>
+            <h2 className={`text-xl font-semibold ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+              {translations[language].transactions}
+            </h2>
             <button
               onClick={exportToCSV}
-              className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded text-sm"
+              className={`bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded text-sm ${language === "zh" ? "font-noto-sans-tc" : ""}`}
             >
-              Export CSV
+              {translations[language].exportCSV}
             </button>
           </div>
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
+                <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                  {translations[language].date}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Type
+                <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                  {translations[language].type}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Category
+                <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                  {translations[language].category}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Amount
+                <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                  {translations[language].amount}
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Description
+                <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                  {translations[language].description}
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className={`px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
                   Actions
                 </th>
               </tr>
@@ -358,8 +438,8 @@ export default function App() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       {t.date}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm capitalize">
-                      {t.type}
+                    <td className={`px-6 py-4 whitespace-nowrap text-sm capitalize ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                      {translations[language][t.type]}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       {t.category}
@@ -367,29 +447,29 @@ export default function App() {
                     <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${t.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
                       ${t.amount.toFixed(2)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <td className={`px-6 py-4 whitespace-nowrap text-sm ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
                       {t.description}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                       <button
                         onClick={() => handleEdit(t)}
-                        className="text-blue-600 hover:text-blue-900 mr-2"
+                        className={`text-blue-600 hover:text-blue-900 mr-2 ${language === "zh" ? "font-noto-sans-tc" : ""}`}
                       >
-                        Edit
+                        {translations[language].edit}
                       </button>
                       <button
                         onClick={() => handleDelete(t.id)}
-                        className="text-red-600 hover:text-red-900"
+                        className={`text-red-600 hover:text-red-900 ${language === "zh" ? "font-noto-sans-tc" : ""}`}
                       >
-                        Delete
+                        {translations[language].delete}
                       </button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
-                    No transactions found.
+                  <td colSpan="6" className={`px-6 py-4 text-center text-gray-500 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                    {translations[language].noTransactions}
                   </td>
                 </tr>
               )}
