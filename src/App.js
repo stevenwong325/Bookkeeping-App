@@ -26,7 +26,20 @@ const translations = {
     exportCSV: "Export CSV",
     noTransactions: "No transactions found.",
     edit: "Edit",
-    delete: "Delete"
+    delete: "Delete",
+    manageCategories: "Manage Categories",
+    addCategory: "Add Category",
+    categoryName: "Category Name",
+    categoryType: "Category Type",
+    save: "Save",
+    cancel: "Cancel",
+    deleteCategory: "Delete Category",
+    incomeCategories: "Income Categories",
+    expenseCategories: "Expense Categories",
+    newCategory: "New Category",
+    categoryExists: "Category already exists",
+    categoryAdded: "Category added successfully",
+    categoryDeleted: "Category deleted successfully"
   },
   zh: {
     title: "記帳應用",
@@ -53,17 +66,32 @@ const translations = {
     exportCSV: "匯出CSV",
     noTransactions: "未找到交易記錄。",
     edit: "編輯",
-    delete: "刪除"
+    delete: "刪除",
+    manageCategories: "管理類別",
+    addCategory: "新增類別",
+    categoryName: "類別名稱",
+    categoryType: "類別類型",
+    save: "儲存",
+    cancel: "取消",
+    deleteCategory: "刪除類別",
+    incomeCategories: "收入類別",
+    expenseCategories: "支出類別",
+    newCategory: "新增類別",
+    categoryExists: "類別已存在",
+    categoryAdded: "類別新增成功",
+    categoryDeleted: "類別刪除成功"
   }
 };
 
 export default function App() {
   const [language, setLanguage] = useState("en");
   const [transactions, setTransactions] = useState([]);
-  const [categories] = useState({
+  const [categories, setCategories] = useState({
     income: ["Salary", "Freelance", "Investment", "Gift"],
     expense: ["Rent", "Groceries", "Utilities", "Transport", "Entertainment"],
   });
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [newCategory, setNewCategory] = useState({ name: "", type: "income" });
 
   const [form, setForm] = useState({
     type: "income",
@@ -185,12 +213,46 @@ export default function App() {
     link.click();
   };
 
+  const handleAddCategory = () => {
+    if (!newCategory.name.trim()) return;
+
+    const categoryExists = categories[newCategory.type].includes(newCategory.name);
+    if (categoryExists) {
+      alert(translations[language].categoryExists);
+      return;
+    }
+
+    setCategories(prev => ({
+      ...prev,
+      [newCategory.type]: [...prev[newCategory.type], newCategory.name]
+    }));
+
+    setNewCategory({ name: "", type: "income" });
+    alert(translations[language].categoryAdded);
+  };
+
+  const handleDeleteCategory = (type, category) => {
+    if (window.confirm(translations[language].deleteCategory + "?")) {
+      setCategories(prev => ({
+        ...prev,
+        [type]: prev[type].filter(c => c !== category)
+      }));
+      alert(translations[language].categoryDeleted);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <header className="text-center">
-          <div className="flex justify-end mb-4">
+          <div className="flex justify-end mb-4 space-x-2">
+            <button
+              onClick={() => setShowCategoryModal(true)}
+              className="bg-purple-600 hover:bg-purple-700 text-white py-1 px-3 rounded text-sm"
+            >
+              {translations[language].manageCategories}
+            </button>
             <button
               onClick={() => setLanguage(language === "en" ? "zh" : "en")}
               className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded text-sm"
@@ -205,6 +267,105 @@ export default function App() {
             {translations[language].subtitle}
           </p>
         </header>
+
+        {/* Category Management Modal */}
+        {showCategoryModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg p-6 max-w-2xl w-full">
+              <h2 className={`text-xl font-semibold mb-4 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                {translations[language].manageCategories}
+              </h2>
+
+              {/* Add New Category Form */}
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <h3 className={`text-lg font-medium mb-3 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                  {translations[language].newCategory}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className={`block text-sm font-medium text-gray-700 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                      {translations[language].categoryName}
+                    </label>
+                    <input
+                      type="text"
+                      value={newCategory.name}
+                      onChange={(e) => setNewCategory(prev => ({ ...prev, name: e.target.value }))}
+                      className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    />
+                  </div>
+                  <div>
+                    <label className={`block text-sm font-medium text-gray-700 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                      {translations[language].categoryType}
+                    </label>
+                    <select
+                      value={newCategory.type}
+                      onChange={(e) => setNewCategory(prev => ({ ...prev, type: e.target.value }))}
+                      className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    >
+                      <option value="income">{translations[language].income}</option>
+                      <option value="expense">{translations[language].expense}</option>
+                    </select>
+                  </div>
+                </div>
+                <button
+                  onClick={handleAddCategory}
+                  className="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
+                >
+                  {translations[language].addCategory}
+                </button>
+              </div>
+
+              {/* Existing Categories */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className={`text-lg font-medium mb-3 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                    {translations[language].incomeCategories}
+                  </h3>
+                  <div className="space-y-2">
+                    {categories.income.map((category) => (
+                      <div key={category} className="flex justify-between items-center bg-gray-50 p-2 rounded">
+                        <span className={`${language === "zh" ? "font-noto-sans-tc" : ""}`}>{category}</span>
+                        <button
+                          onClick={() => handleDeleteCategory("income", category)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          {translations[language].delete}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h3 className={`text-lg font-medium mb-3 ${language === "zh" ? "font-noto-sans-tc" : ""}`}>
+                    {translations[language].expenseCategories}
+                  </h3>
+                  <div className="space-y-2">
+                    {categories.expense.map((category) => (
+                      <div key={category} className="flex justify-between items-center bg-gray-50 p-2 rounded">
+                        <span className={`${language === "zh" ? "font-noto-sans-tc" : ""}`}>{category}</span>
+                        <button
+                          onClick={() => handleDeleteCategory("expense", category)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          {translations[language].delete}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => setShowCategoryModal(false)}
+                  className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded"
+                >
+                  {translations[language].cancel}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Balance Summary */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
